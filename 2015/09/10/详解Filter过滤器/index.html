@@ -6,15 +6,20 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://www.liuyang7.club">
-  <title>Tag: java | 踏雪寻梅</title>
+  <title>详解Filter 过滤器 | 踏雪寻梅</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="踏雪寻梅">
-<meta property="og:url" content="http://www.liuyang7.club/tags/java/index.html">
+  <meta name="description" content="1、简介 　　Filter也称之为过滤器，它是Servlet技术中最实用的技术，WEB开发人员通过Filter技术，对web服务器管理的所有web资源：例如Jsp, Servlet, 静态图片文件或静态 html 文件等进行拦截，从而实现一些特殊的功能。例如实现URL级别的权限访问控制、过滤敏感词汇、压缩响应信息等一些">
+<meta name="keywords" content="java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="详解Filter 过滤器">
+<meta property="og:url" content="http://www.liuyang7.club/2015/09/10/详解Filter过滤器/index.html">
 <meta property="og:site_name" content="踏雪寻梅">
+<meta property="og:description" content="1、简介 　　Filter也称之为过滤器，它是Servlet技术中最实用的技术，WEB开发人员通过Filter技术，对web服务器管理的所有web资源：例如Jsp, Servlet, 静态图片文件或静态 html 文件等进行拦截，从而实现一些特殊的功能。例如实现URL级别的权限访问控制、过滤敏感词汇、压缩响应信息等一些高级功能。 　　它主要用于对用户请求进行预处理，也可以对HttpServletR">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2017-12-03T08:46:52.726Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="踏雪寻梅">
+<meta name="twitter:title" content="详解Filter 过滤器">
+<meta name="twitter:description" content="1、简介 　　Filter也称之为过滤器，它是Servlet技术中最实用的技术，WEB开发人员通过Filter技术，对web服务器管理的所有web资源：例如Jsp, Servlet, 静态图片文件或静态 html 文件等进行拦截，从而实现一些特殊的功能。例如实现URL级别的权限访问控制、过滤敏感词汇、压缩响应信息等一些高级功能。 　　它主要用于对用户请求进行预处理，也可以对HttpServletR">
   
     <link rel="alternative" href="/atom.xml" title="踏雪寻梅" type="application/atom+xml">
   
@@ -150,36 +155,147 @@ var _hmt = _hmt || [];
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
+            <article id="post-详解Filter过滤器" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
   
+    <h1 class="article-title" itemprop="name">
+      详解Filter 过滤器
+    </h1>
   
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2015" class="archive-year">2015</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2015/09/10/详解Filter过滤器/" class="archive-article-date">
+
+        
+        <a href="/2015/09/10/详解Filter过滤器/" class="archive-article-date">
   	<time datetime="2015-09-10T13:59:15.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2015-09-10</time>
 </a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2015/09/10/详解Filter过滤器/">详解Filter 过滤器</a>
-    </h1>
-  
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>1、简介</strong></p>
+<p>　　Filter也称之为过滤器，它是Servlet技术中最实用的技术，WEB开发人员通过Filter技术，对web服务器管理的所有web资源：例如Jsp, Servlet, 静态图片文件或静态 html 文件等进行拦截，从而实现一些特殊的功能。例如实现URL级别的权限访问控制、过滤敏感词汇、压缩响应信息等一些高级功能。</p>
+<p>　　它主要用于对用户请求进行预处理，也可以对HttpServletResponse 进行后处理。使用Filter 的完整流程：Filter 对用户请求进行预处理，接着将请求交给Servlet 进行处理并生成响应，最后Filter 再对服务器响应进行后处理。</p>
+<a id="more"></a>
+<p>　　Filter功能：</p>
+<ul>
+<li>在HttpServletRequest 到达 Servlet 之前，拦截客户的 HttpServletRequest 。 根据需要检查 HttpServletRequest ，也可以修改HttpServletRequest 头和数据。</li>
+<li>在HttpServletResponse 到达客户端之前，拦截HttpServletResponse 。 根据需要检查 HttpServletResponse ，也可以修改HttpServletResponse头和数据。</li>
+</ul>
+<p><strong>2、如何实现拦截</strong></p>
+<p>　　Filter接口中有一个doFilter方法，当开发人员编写好Filter，并配置对哪个web资源进行拦截后，WEB服务器每次在调用web资源的service方法之前，都会先调用一下filter的doFilter方法，因此，在该方法内编写代码可达到如下目的：</p>
+<ol>
+<li>调用目标资源之前，让一段代码执行。</li>
+<li>是否调用目标资源（即是否让用户访问web资源）。</li>
+</ol>
+<p>　　web服务器在调用doFilter方法时，会传递一个filterChain对象进来，<strong>filterChain对象是filter接口中最重要的一个对象</strong>，它也提供了一个doFilter方法，开发人员可以根据需求决定是否调用此方法，调用该方法，则web服务器就会调用web资源的service方法，即web资源就会被访问，否则web资源不会被访问。</p>
+<p><strong>3、Filter开发两步走</strong></p>
+<ol>
+<li>编写java类实现Filter接口，并实现其doFilter方法。</li>
+<li>在 web.xml 文件中使用和元素对编写的filter类进行注册，并设置它所能拦截的资源。</li>
+</ol>
+<p>　　web.xml配置各节点介绍：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&lt;filter-name&gt;用于为过滤器指定一个名字，该元素的内容不能为空。</span><br><span class="line">&lt;filter-class&gt;元素用于指定过滤器的完整的限定类名。</span><br><span class="line">&lt;init-param&gt;元素用于为过滤器指定初始化参数，它的子元素&lt;param-name&gt;指定参数的名字，&lt;param-value&gt;指定参数的值。</span><br><span class="line">在过滤器中，可以使用FilterConfig接口对象来访问初始化参数。</span><br><span class="line"></span><br><span class="line">&lt;filter-mapping&gt;元素用于设置一个 Filter 所负责拦截的资源。一个Filter拦截的资源可通过两种方式来指定：Servlet 名称和资源访问的请求路径</span><br><span class="line">&lt;filter-name&gt;子元素用于设置filter的注册名称。该值必须是在&lt;filter&gt;元素中声明过的过滤器的名字</span><br><span class="line">&lt;url-pattern&gt;设置 filter 所拦截的请求路径(过滤器关联的URL样式)</span><br><span class="line">&lt;servlet-name&gt;指定过滤器所拦截的Servlet名称。</span><br><span class="line">&lt;dispatcher&gt;指定过滤器所拦截的资源被 Servlet 容器调用的方式，可以是REQUEST,INCLUDE,FORWARD和ERROR之一，默认REQUEST。用户可以设置多个&lt;dispatcher&gt; 子元素用来指定 Filter 对资源的多种调用方式进行拦截。</span><br><span class="line"></span><br><span class="line">&lt;dispatcher&gt; 子元素可以设置的值及其意义：</span><br><span class="line">REQUEST：当用户直接访问页面时，Web容器将会调用过滤器。如果目标资源是通过RequestDispatcher的include()或forward()方法访问时，那么该过滤器就不会被调用。</span><br><span class="line">INCLUDE：如果目标资源是通过RequestDispatcher的include()方法访问时，那么该过滤器将被调用。除此之外，该过滤器不会被调用。</span><br><span class="line">FORWARD：如果目标资源是通过RequestDispatcher的forward()方法访问时，那么该过滤器将被调用，除此之外，该过滤器不会被调用。</span><br><span class="line">ERROR：如果目标资源是通过声明式异常处理机制调用时，那么该过滤器将被调用。除此之外，过滤器不会被调用。</span><br></pre></td></tr></table></figure>
+<p><strong>4、Filter链</strong></p>
+<p>　　在一个web应用中，可以开发编写多个Filter，这些Filter组合起来称之为一个Filter链。</p>
+<p>　　<strong>web服务器根据Filter在web.xml文件中的注册顺序，决定先调用哪个Filter</strong>，当第一个Filter的doFilter方法被调用时，web服务器会创建一个代表Filter链的FilterChain对象传递给该方法。在doFilter方法中，开发人员如果调用了FilterChain对象的doFilter方法，则web服务器会检查FilterChain对象中是否还有filter，如果有，则调用第2个filter，如果没有，则调用目标资源。</p>
+<p><strong>多个过滤器执行顺序</strong></p>
+<p>一个目标资源可以指定多个过滤器，过滤器的执行顺序是在web.xml文件中的部署顺序：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&lt;filter&gt;</span><br><span class="line">    &lt;filter-name&gt;myFilter1&lt;/filter-name&gt;</span><br><span class="line">    &lt;filter-class&gt;cn.cloud.filter.MyFilter1&lt;/filter-class&gt;</span><br><span class="line">  &lt;/filter&gt;</span><br><span class="line">  &lt;filter-mapping&gt;</span><br><span class="line">    &lt;filter-name&gt;myFilter1&lt;/filter-name&gt;</span><br><span class="line">    &lt;url-pattern&gt;/index.jsp&lt;/url-pattern&gt;</span><br><span class="line">  &lt;/filter-mapping&gt;</span><br><span class="line">  &lt;filter&gt;</span><br><span class="line">    &lt;filter-name&gt;myFilter2&lt;/filter-name&gt;</span><br><span class="line">    &lt;filter-class&gt;cn. cloud.filter.MyFilter2&lt;/filter-class&gt;</span><br><span class="line">  &lt;/filter&gt;</span><br><span class="line">  &lt;filter-mapping&gt;</span><br><span class="line">    &lt;filter-name&gt;myFilter2&lt;/filter-name&gt;</span><br><span class="line">    &lt;url-pattern&gt;/index.jsp&lt;/url-pattern&gt;</span><br><span class="line">  &lt;/filter-mapping&gt;</span><br></pre></td></tr></table></figure>
+<p><code>MyFilter1</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">public class MyFilter1 extends HttpFilter &#123;</span><br><span class="line">    public void doFilter(HttpServletRequest request, HttpServletResponse response,</span><br><span class="line">           FilterChain chain) throws IOException, ServletException &#123;</span><br><span class="line">       System.out.println(&quot;filter1 start...&quot;);</span><br><span class="line">       chain.doFilter(request, response);//放行，执行MyFilter2的doFilter()方法</span><br><span class="line">       System.out.println(&quot;filter1 end...&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>MyFilter2</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">public class MyFilter2 extends HttpFilter &#123;</span><br><span class="line">    public void doFilter(HttpServletRequest request, HttpServletResponse response,</span><br><span class="line">           FilterChain chain) throws IOException, ServletException &#123;</span><br><span class="line">       System.out.println(&quot;filter2 start...&quot;);</span><br><span class="line">       chain.doFilter(request, response);//放行，执行目标资源</span><br><span class="line">       System.out.println(&quot;filter2 end...&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;body&gt;</span><br><span class="line">    This is my JSP page. &lt;br&gt;</span><br><span class="line">    &lt;h1&gt;index.jsp&lt;/h1&gt;</span><br><span class="line">    &lt;%System.out.println(&quot;index.jsp&quot;); %&gt;</span><br><span class="line">  &lt;/body&gt;</span><br></pre></td></tr></table></figure>
+<p>当有用户访问index.jsp页面时，输出结果如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">filter1 start...</span><br><span class="line">filter2 start...</span><br><span class="line">index.jsp</span><br><span class="line">filter2 end...</span><br><span class="line">filter1 end...</span><br></pre></td></tr></table></figure>
+<p><strong>5、Filter的生命周期</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public void init(FilterConfig filterConfig) throws ServletException;//初始化</span><br></pre></td></tr></table></figure>
+<p>　　和我们编写的Servlet程序一样，Filter的创建和销毁由WEB服务器负责。 web 应用程序启动时，web 服务器将创建Filter 的实例对象，并调用其init方法，读取web.xml配置，完成对象的初始化功能，从而为后续的用户请求作好拦截的准备工作<strong>（filter对象只会创建一次，init方法也只会执行一次）</strong>。开发人员通过init方法的参数，可获得代表当前filter配置信息的FilterConfig对象。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException;//拦截请求</span><br></pre></td></tr></table></figure>
+<p>　　这个方法完成实际的过滤操作。当<strong>客户请求访问与过滤器关联的URL（目标资源）</strong>的时候，Servlet过滤器将先执行doFilter方法。FilterChain参数用于访问后续过滤器。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public void destroy();//销毁</span><br></pre></td></tr></table></figure>
+<p>　　服务器在创建Filter对象之后，把Filter放到缓存中一直使用（会驻留在内存），通常不会销毁它，当web应用移除或服务器停止时才销毁Filter对象。在Web容器卸载 Filter 对象之前被调用。该方法在Filter的生命周期中仅执行一次。在这个方法中，可以释放过滤器使用的资源。</p>
+<p><strong>6、FilterConfig接口</strong></p>
+<p>　　用户在配置filter时，可以使用为filter配置一些初始化参数，当web容器实例化Filter对象，调用其init方法时，会把封装了filter初始化参数的filterConfig对象传递进来。因此开发人员在编写filter时，通过filterConfig对象的方法，就可获得以下内容：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">String getFilterName();//得到filter的名称；与&lt;filter-name&gt;元素对应。</span><br><span class="line">String getInitParameter(String name);//返回在部署描述中指定名称的初始化参数的值。如果不存在返回null，与&lt;init-param&gt;元素对应.</span><br><span class="line">Enumeration getInitParameterNames();//返回过滤器的所有初始化参数的名字的枚举集合。</span><br><span class="line">public ServletContext getServletContext();//返回Servlet上下文对象的引用。</span><br></pre></td></tr></table></figure>
+<p><strong>7、FilterChain</strong></p>
+<p>doFilter()方法的参数中有一个类型为FilterChain的参数，它只有一个方法：<code>doFilter(ServletRequest,ServletResponse)</code></p>
+<p>doFilter() 方法的放行，让请求流访问目标资源！其实调用该方法的意思是，当前 Filter 放行了，但不代表其他过滤器也放行。一个目标资源上，可能部署了多个过滤器，所以调用 FilterChain 类的 doFilter() 方法表示的是执行下一个过滤器的 doFilter() 方法，或者是执行目标资源！</p>
+<p>如果当前过滤器是最后一个过滤器，那么调用 chain.doFilter() 方法表示执行目标资源，而不是最后一个过滤器，那么 chain.doFilter() 表示执行下一个过滤器的 doFilter() 方法。</p>
+<p><strong>8、过滤器的应用场景</strong></p>
+<ul>
+<li>执行目标资源之前做<strong>预处理</strong>工作，例如设置编码，这种试<strong>通常都会放行</strong>，只是在目标资源执行之前做一些准备工作；</li>
+<li>通过条件判断是否放行，例如校验当前用户是否已经登录，或者用户IP是否已经被禁用；</li>
+<li>在目标资源执行后，做一些后续的特殊处理工作，例如把目标资源输出的数据进行处理</li>
+</ul>
+<p><strong>设置目标资源</strong></p>
+<p>在web.xml文件中部署Filter时，可以通过“*”来执行目标资源：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;filter-mapping&gt;</span><br><span class="line">       &lt;filter-name&gt;myfilter&lt;/filter-name&gt;</span><br><span class="line">       &lt;url-pattern&gt;/*&lt;/url-pattern&gt;</span><br><span class="line">    &lt;/filter-mapping&gt;</span><br></pre></td></tr></table></figure>
+<p>特性与Servlet完全相同！通过这一特性，可以在用户访问敏感资源时，执行过滤器，例如：/admin/*，可以把所有管理员才能访问的资源放到/admin路径下，这时可以通过过滤器来校验用户身份。</p>
+<p>还可以为指定目标资源为某个Servlet，例如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&lt;servlet&gt;</span><br><span class="line">       &lt;servlet-name&gt;myservlet&lt;/servlet-name&gt;</span><br><span class="line">       &lt;servlet-class&gt;cn.cloud.servlet.MyServlet&lt;/servlet-class&gt;</span><br><span class="line">    &lt;/servlet&gt;</span><br><span class="line">    &lt;servlet-mapping&gt;</span><br><span class="line">       &lt;servlet-name&gt;myservlet&lt;/servlet-name&gt;</span><br><span class="line">       &lt;url-pattern&gt;/abc&lt;/url-pattern&gt;</span><br><span class="line">    &lt;/servlet-mapping&gt;</span><br><span class="line">    &lt;filter&gt;</span><br><span class="line">       &lt;filter-name&gt;myfilter&lt;/filter-name&gt;</span><br><span class="line">       &lt;filter-class&gt;cn.cloud.filter.MyFilter&lt;/filter-class&gt;</span><br><span class="line">    &lt;/filter&gt;</span><br><span class="line">    &lt;filter-mapping&gt;</span><br><span class="line">       &lt;filter-name&gt;myfilter&lt;/filter-name&gt;</span><br><span class="line">       &lt;servlet-name&gt;myservlet&lt;/servlet-name&gt;</span><br><span class="line">    &lt;/filter-mapping&gt;</span><br></pre></td></tr></table></figure>
+<p>当用户访问<code>http://localhost:8080/filtertest/abc</code>时，会执行名字为myservlet的Servlet，这时会执行过滤器。</p>
+<p><strong>9、四种拦截方式</strong></p>
+<p>写一个过滤器，指定过滤的资源为b.jsp，然后在浏览器中直接访问b.jsp，会发现过滤器执行了.但是，当在a.jsp中request.getRequestDispathcer(“/b.jsp”).forward(request,response)时，就不会再执行过滤器了！也就是说，默认情况下，只能直接访问目标资源才会执行过滤器，而forward执行目标资源，不会执行过滤器！</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">public class MyFilter extends HttpFilter &#123;</span><br><span class="line">    public void doFilter(HttpServletRequest request,</span><br><span class="line">           HttpServletResponse response, FilterChain chain)</span><br><span class="line">           throws IOException, ServletException &#123;</span><br><span class="line">       System.out.println(&quot;myfilter...&quot;);</span><br><span class="line">       chain.doFilter(request, response);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;filter&gt;</span><br><span class="line">       &lt;filter-name&gt;myfilter&lt;/filter-name&gt;</span><br><span class="line">       &lt;filter-class&gt;cn.itcast.filter.MyFilter&lt;/filter-class&gt;</span><br><span class="line">    &lt;/filter&gt;</span><br><span class="line">    &lt;filter-mapping&gt;</span><br><span class="line">       &lt;filter-name&gt;myfilter&lt;/filter-name&gt;</span><br><span class="line">       &lt;url-pattern&gt;/b.jsp&lt;/url-pattern&gt;</span><br><span class="line">    &lt;/filter-mapping&gt;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;body&gt;</span><br><span class="line">   &lt;h1&gt;b.jsp&lt;/h1&gt;</span><br><span class="line">  &lt;/body&gt;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;h1&gt;a.jsp&lt;/h1&gt;</span><br><span class="line">    &lt;%</span><br><span class="line">    request.getRequestDispatcher(&quot;/b.jsp&quot;).forward(request, response);</span><br><span class="line">    %&gt;</span><br><span class="line">  &lt;/body&gt;</span><br></pre></td></tr></table></figure>
+<p>在浏览器输入：</p>
+<p><code>http://localhost:8080/filtertest/b.jsp</code> 直接访问b.jsp时，会执行过滤器内容；</p>
+<p><code>http://localhost:8080/filtertest/a.jsp</code> 访问a.jsp，但a.jsp会forward到b.jsp，这时就不会执行过滤器！</p>
+<p>过滤器有四种拦截方式！分别是：<strong>REQUEST</strong>、<strong>FORWARD</strong>、<strong>INCLUDE</strong>、<strong>ERROR</strong>。</p>
+<blockquote>
+<ul>
+<li>REQUEST：直接访问目标资源时执行过滤器。包括：在地址栏中直接访问、表单提交、超链接、重定向，只要在地址栏中可以看到目标资源的路径，就是REQUEST</li>
+<li>FORWARD：转发访问执行过滤器。包括RequestDispatcher#forward()方法、标签都是转发访问</li>
+<li>INCLUDE：包含访问执行过滤器。包括RequestDispatcher#include()方法、标签都是包含访问</li>
+<li>ERROR：当目标资源在web.xml中配置为中时，并且真的出现了异常，转发到目标资源时，会执行过滤器。</li>
+</ul>
+</blockquote>
+<p>可以在中添加0~n个子元素，来说明当前访问的拦截方式。</p>
+<p>如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;filter-mapping&gt;</span><br><span class="line">      &lt;filter-name&gt;myfilter&lt;/filter-name&gt;</span><br><span class="line">      &lt;url-pattern&gt;/b.jsp&lt;/url-pattern&gt;</span><br><span class="line">      &lt;dispatcher&gt;REQUEST&lt;/dispatcher&gt;</span><br><span class="line">      &lt;dispatcher&gt;FORWARD&lt;/dispatcher&gt;</span><br><span class="line">   &lt;/filter-mapping&gt;</span><br></pre></td></tr></table></figure>
+<p>最为常用的就是REQUEST和FORWARD两种拦截方式，而INCLUDE和ERROR都比较少用！其中INCLUDE比较好理解，ERROR方式不易理解，下面给出ERROR拦截方式的例子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;filter-mapping&gt;</span><br><span class="line">       &lt;filter-name&gt;myfilter&lt;/filter-name&gt;</span><br><span class="line">       &lt;url-pattern&gt;/b.jsp&lt;/url-pattern&gt;</span><br><span class="line">       &lt;dispatcher&gt;ERROR&lt;/dispatcher&gt;</span><br><span class="line">    &lt;/filter-mapping&gt;</span><br><span class="line">    &lt;error-page&gt;</span><br><span class="line">       &lt;error-code&gt;500&lt;/error-code&gt;</span><br><span class="line">       &lt;location&gt;/b.jsp&lt;/location&gt;</span><br><span class="line">    &lt;/error-page&gt;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;body&gt;</span><br><span class="line">  &lt;h1&gt;a.jsp&lt;/h1&gt;</span><br><span class="line">   &lt;%</span><br><span class="line">   if(true)</span><br><span class="line">   throw new RuntimeException(&quot;嘻嘻~&quot;);</span><br><span class="line">   %&gt;</span><br><span class="line">  &lt;/body&gt;</span><br></pre></td></tr></table></figure>
+<p><strong>10、Filter使用案例</strong></p>
+<p>　　<strong>1、使用Filter验证用户登录安全控制</strong></p>
+<p>　　前段时间参与维护一个项目，用户退出系统后，再去地址栏访问历史，根据url，仍然能够进入系统响应页面。我去检查一下发现对请求未进行过滤验证用户登录。添加一个filter搞定问题！</p>
+<p>　　先在web.xml配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">&lt;filter&gt;</span><br><span class="line">    &lt;filter-name&gt;SessionFilter&lt;/filter-name&gt;</span><br><span class="line">    &lt;filter-class&gt;com.action.login.SessionFilter&lt;/filter-class&gt;</span><br><span class="line">    &lt;init-param&gt;</span><br><span class="line">        &lt;param-name&gt;logonStrings&lt;/param-name&gt;&lt;!-- 对登录页面不进行过滤 --&gt;</span><br><span class="line">        &lt;param-value&gt;/project/index.jsp;login.do&lt;/param-value&gt;</span><br><span class="line">    &lt;/init-param&gt;</span><br><span class="line">    &lt;init-param&gt;</span><br><span class="line">        &lt;param-name&gt;includeStrings&lt;/param-name&gt;&lt;!-- 只对指定过滤参数后缀进行过滤 --&gt;</span><br><span class="line">        &lt;param-value&gt;.do;.jsp&lt;/param-value&gt;</span><br><span class="line">    &lt;/init-param&gt;</span><br><span class="line">    &lt;init-param&gt;</span><br><span class="line">        &lt;param-name&gt;redirectPath&lt;/param-name&gt;&lt;!-- 未通过跳转到登录界面 --&gt;</span><br><span class="line">        &lt;param-value&gt;/index.jsp&lt;/param-value&gt;</span><br><span class="line">    &lt;/init-param&gt;</span><br><span class="line">    &lt;init-param&gt;</span><br><span class="line">        &lt;param-name&gt;disabletestfilter&lt;/param-name&gt;&lt;!-- Y:过滤无效 --&gt;</span><br><span class="line">        &lt;param-value&gt;N&lt;/param-value&gt;</span><br><span class="line">    &lt;/init-param&gt;</span><br><span class="line">&lt;/filter&gt;</span><br><span class="line">&lt;filter-mapping&gt;</span><br><span class="line">    &lt;filter-name&gt;SessionFilter&lt;/filter-name&gt;</span><br><span class="line">    &lt;url-pattern&gt;/*&lt;/url-pattern&gt;</span><br><span class="line">&lt;/filter-mapping&gt;</span><br></pre></td></tr></table></figure>
+<p>　　接着编写FilterServlet：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><span class="line">package com.action.login;</span><br><span class="line"></span><br><span class="line">import java.io.IOException;</span><br><span class="line"></span><br><span class="line">import javax.servlet.Filter;</span><br><span class="line">import javax.servlet.FilterChain;</span><br><span class="line">import javax.servlet.FilterConfig;</span><br><span class="line">import javax.servlet.ServletException;</span><br><span class="line">import javax.servlet.ServletRequest;</span><br><span class="line">import javax.servlet.ServletResponse;</span><br><span class="line">import javax.servlet.http.HttpServletRequest;</span><br><span class="line">import javax.servlet.http.HttpServletResponse;</span><br><span class="line">import javax.servlet.http.HttpServletResponseWrapper;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> *    判断用户是否登录,未登录则退出系统</span><br><span class="line"> */</span><br><span class="line">public class SessionFilter implements Filter &#123;</span><br><span class="line"></span><br><span class="line">    public FilterConfig config;</span><br><span class="line"></span><br><span class="line">    public void destroy() &#123;</span><br><span class="line">        this.config = null;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static boolean isContains(String container, String[] regx) &#123;</span><br><span class="line">        boolean result = false;</span><br><span class="line"></span><br><span class="line">        for (int i = 0; i &lt; regx.length; i++) &#123;</span><br><span class="line">            if (container.indexOf(regx[i]) != -1) &#123;</span><br><span class="line">                return true;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return result;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException &#123;</span><br><span class="line">        HttpServletRequest hrequest = (HttpServletRequest)request;</span><br><span class="line">        HttpServletResponseWrapper wrapper = new HttpServletResponseWrapper((HttpServletResponse) response);</span><br><span class="line"></span><br><span class="line">        String logonStrings = config.getInitParameter(&quot;logonStrings&quot;);        // 登录登陆页面</span><br><span class="line">        String includeStrings = config.getInitParameter(&quot;includeStrings&quot;);    // 过滤资源后缀参数</span><br><span class="line">        String redirectPath = hrequest.getContextPath() + config.getInitParameter(&quot;redirectPath&quot;);// 没有登陆转向页面</span><br><span class="line">        String disabletestfilter = config.getInitParameter(&quot;disabletestfilter&quot;);// 过滤器是否有效</span><br><span class="line"></span><br><span class="line">        if (disabletestfilter.toUpperCase().equals(&quot;Y&quot;)) &#123;    // 过滤无效</span><br><span class="line">            chain.doFilter(request, response);</span><br><span class="line">            return;</span><br><span class="line">        &#125;</span><br><span class="line">        String[] logonList = logonStrings.split(&quot;;&quot;);</span><br><span class="line">        String[] includeList = includeStrings.split(&quot;;&quot;);</span><br><span class="line"></span><br><span class="line">        if (!this.isContains(hrequest.getRequestURI(), includeList)) &#123;// 只对指定过滤参数后缀进行过滤</span><br><span class="line">            chain.doFilter(request, response);</span><br><span class="line">            return;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        if (this.isContains(hrequest.getRequestURI(), logonList)) &#123;// 对登录页面不进行过滤</span><br><span class="line">            chain.doFilter(request, response);</span><br><span class="line">            return;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        String user = ( String ) hrequest.getSession().getAttribute(&quot;useronly&quot;);//判断用户是否登录</span><br><span class="line">        if (user == null) &#123;</span><br><span class="line">            wrapper.sendRedirect(redirectPath);</span><br><span class="line">            return;</span><br><span class="line">        &#125;else &#123;</span><br><span class="line">            chain.doFilter(request, response);</span><br><span class="line">            return;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void init(FilterConfig filterConfig) throws ServletException &#123;</span><br><span class="line">        config = filterConfig;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>　　这样既可完成对用户所有请求，均要经过这个Filter进行验证用户登录。</p>
+<p>　　<strong>2、防止中文乱码过滤器</strong></p>
+<p>　　项目使用spring框架时。当前台JSP页面和JAVA代码中使用了不同的字符集进行编码的时候就会出现表单提交的数据或者上传/下载中文名称文件出现乱码的问题，那就可以使用这个过滤器。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&lt;filter&gt;</span><br><span class="line">    &lt;filter-name&gt;encoding&lt;/filter-name&gt;</span><br><span class="line">    &lt;filter-class&gt;org.springframework.web.filter.CharacterEncodingFilter&lt;/filter-class&gt;</span><br><span class="line">    &lt;init-param&gt;</span><br><span class="line">        &lt;param-name&gt;encoding&lt;/param-name&gt;&lt;!--用来指定一个具体的字符集--&gt;</span><br><span class="line">        &lt;param-value&gt;UTF-8&lt;/param-value&gt;</span><br><span class="line">    &lt;/init-param&gt;</span><br><span class="line">    &lt;init-param&gt;</span><br><span class="line">        &lt;param-name&gt;forceEncoding&lt;/param-name&gt;&lt;!--true：无论request是否指定了字符集，都是用encoding；false：如果request已指定一个字符集，则不使用encoding--&gt;</span><br><span class="line">        &lt;param-value&gt;false&lt;/param-value&gt;</span><br><span class="line">    &lt;/init-param&gt;</span><br><span class="line">&lt;/filter&gt;</span><br><span class="line">&lt;filter-mapping&gt;</span><br><span class="line">    &lt;filter-name&gt;encoding&lt;/filter-name&gt;</span><br><span class="line">    &lt;url-pattern&gt;/*&lt;/url-pattern&gt;</span><br><span class="line">&lt;/filter-mapping&gt;</span><br></pre></td></tr></table></figure>
+<p>　　<strong>3、Spring+Hibernate的OpenSessionInViewFilter控制session的开关</strong></p>
+<p>　　当 hibernate+spring 配合使用的时候，如果设置了lazy=true（延迟加载）,那么在读取数据的时候，当读取了父数据后，hibernate 会自动关闭 session，这样，当要使用与之关联数据、子数据的时候，系统会抛出lazyinit的错误，这时就需要使用 spring 提供的 OpenSessionInViewFilter 过滤器。</p>
+<p>　　OpenSessionInViewFilter主要是保持 Session 状态直到 request 将全部页面发送到客户端，直到请求结束后才关闭 session，这样就可以解决延迟加载带来的问题。</p>
+<p>　　注意：OpenSessionInViewFilter 配置要写在struts2的配置前面。因为 tomcat 容器在加载过滤器的时候是按照顺序加载的，如果配置文件先写的是 struts2 的过滤器配置，然后才是 OpenSessionInViewFilter 过滤器配置，所以加载的顺序导致，action 在获得数据的时候 session 并没有被 spring 管理。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- lazy loading enabled in spring --&gt;</span><br><span class="line">&lt;filter&gt;</span><br><span class="line">    &lt;filter-name&gt;OpenSessionInViewFilter&lt;/filter-name&gt;</span><br><span class="line">    &lt;filter-class&gt;org.springframework.orm.hibernate3.support.OpenSessionInViewFilter&lt;/filter-class&gt;</span><br><span class="line">    &lt;init-param&gt;</span><br><span class="line">        &lt;param-name&gt;sessionFactoryBeanName&lt;/param-name&gt;&lt;!-- 可缺省。默认是从spring容器中找id为sessionFactory的bean，如果id不为sessionFactory，则需要配置如下，此处SessionFactory为spring容器中的bean。 --&gt;</span><br><span class="line">        &lt;param-value&gt;sessionFactory&lt;/param-value&gt;</span><br><span class="line">    &lt;/init-param&gt;</span><br><span class="line">    &lt;init-param&gt;</span><br><span class="line">        &lt;param-name&gt;singleSession&lt;/param-name&gt;&lt;!-- singleSession默认为true,若设为false则等于没用OpenSessionInView --&gt;</span><br><span class="line">        &lt;param-value&gt;true&lt;/param-value&gt;</span><br><span class="line">    &lt;/init-param&gt;</span><br><span class="line">&lt;/filter&gt;</span><br><span class="line">&lt;filter-mapping&gt;</span><br><span class="line">    &lt;filter-name&gt;OpenSessionInViewFilter&lt;/filter-name&gt;</span><br><span class="line">    &lt;url-pattern&gt;*.do&lt;/url-pattern&gt;</span><br><span class="line">&lt;/filter-mapping&gt;</span><br></pre></td></tr></table></figure>
+<p>　　<strong>4、Struts2的web.xml配置</strong></p>
+<p>　　项目中使用Struts2同样需要在web.xml配置过滤器，用来截取请求，转到Struts2的Action进行处理。</p>
+<p>　　注意：如果在2.1.3以前的Struts2版本，过滤器使用<code>org.apache.struts2.dispatcher.FilterDispatcher</code>。否则使用<code>org.apache.struts2.dispatcher.ng.filter.StrutsPrepareAndExecuteFilter</code>。从Struts2.1.3开始，将废弃<code>ActionContextCleanUp</code>过滤器，而在<code>StrutsPrepareAndExecuteFilter</code>过滤器中包含相应的功能。</p>
+<p>　　三个初始化参数配置：</p>
+<ol>
+<li>config参数：指定要加载的配置文件。逗号分割。</li>
+<li>actionPackages参数：指定Action类所在的包空间。逗号分割。</li>
+<li>configProviders参数：自定义配置文件提供者，需要实现ConfigurationProvider接口类。逗号分割。</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- struts 2.x filter --&gt;</span><br><span class="line">&lt;filter&gt;</span><br><span class="line">    &lt;filter-name&gt;struts2&lt;/filter-name&gt;</span><br><span class="line">    &lt;filter-class&gt;org.apache.struts2.dispatcher.ng.filter.StrutsPrepareAndExecuteFilter&lt;/filter-class&gt;</span><br><span class="line">&lt;/filter&gt;</span><br><span class="line">&lt;filter-mapping&gt;</span><br><span class="line">    &lt;filter-name&gt;struts2&lt;/filter-name&gt;</span><br><span class="line">    &lt;url-pattern&gt;*.do&lt;/url-pattern&gt;</span><br><span class="line">&lt;/filter-mapping&gt;</span><br></pre></td></tr></table></figure>
 
-        <div class="article-info info-on-right">
-          
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
@@ -191,95 +307,117 @@ var _hmt = _hmt || [];
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="http://s.jiathis.com/qrcode.php?url=http://www.liuyang7.club/2015/09/10/详解Filter过滤器/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2015/08/01/深入分析 Java Web 中的中文编码问题/" class="archive-article-date">
-  	<time datetime="2015-08-01T15:59:15.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2015-08-01</time>
-</a>
+<nav id="article-nav">
+  
+  
+    <a href="/2015/08/01/深入分析 Java Web 中的中文编码问题/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">深入分析 Java Web 中的中文编码问题</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
+        
+        
+    </div>
+</aside>
+
+
+
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2015/08/01/深入分析 Java Web 中的中文编码问题/">深入分析 Java Web 中的中文编码问题</a>
-    </h1>
+  
   
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2015/07/26/java开发中常见异常与错误处理/" class="archive-article-date">
-  	<time datetime="2015-07-26T02:30:23.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2015-07-26</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2015/07/26/java开发中常见异常与错误处理/">java开发中常见异常与错误处理</a>
-    </h1>
+  <div id="SOHUCS" sid="详解Filter过滤器" ></div> 
+<script type="text/javascript"> 
+window.YiliaChangyanWrap = function() {
+    var appid = "cyth7jjSj"; 
+    var conf = "695b6190ceebcfbf72131ccfe76df745"; 
+    var width = window.innerWidth || document.documentElement.clientWidth; 
+    if (width < 960) { 
+    window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="//changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("//changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); }
+}
+</script>
   
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">java</a>
-        		</li>
-      		
-		</ul>
-	</div>
 
-          
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
   
-  
-    </div></section>
-  
-
-    
 
 
           </div>
@@ -302,9 +440,9 @@ var _hmt = _hmt || [];
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
+		isPost: true,
 		isArchive: false,
-		isTag: true,
+		isTag: false,
 		isCategory: false,
 		open_in_new: false,
 		toc_hide_index: true,
